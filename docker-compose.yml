@@ -10,6 +10,7 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - STACK_YAML=/opt/library/stack.yaml
+      - GHCRTS=-N -A128M
     working_dir: /opt/library
     # command: >
     #   stack exec --cwd /opt/library --

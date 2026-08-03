@@ -1,6 +1,6 @@
 FROM ghcr.io/ihaskell/ihaskell-notebook:master AS runtime
 
-ENV GHCRTS="-N"
+ENV GHCRTS="-N -A128M"
 
 USER root
 
@@ -18,5 +18,12 @@ WORKDIR /opt/library
 RUN printf '%s\n' 'resolver: lts-23.21' 'packages: ["."]' > /opt/library/stack.yaml
 
 RUN stack build
+
+USER root
+RUN python3 -c "import json; p='/usr/local/share/jupyter/kernels/haskell/kernel.json'; \
+    data=json.load(open(p)); \
+    data['argv'][1:1] = ['+RTS', '-N', '-RTS']; \
+    json.dump(data, open(p, 'w'), indent=2)"
+USER jovyan
 
 WORKDIR /home/jovyan/
