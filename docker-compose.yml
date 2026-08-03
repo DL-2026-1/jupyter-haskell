@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   jupyter:
     image: ghcr.io/dl-2026-1/jupyter-haskell:latest
-    build: .  
+    build: .
     container_name: ihaskell_server
     ports:
       - "8888:8888"
@@ -11,4 +9,10 @@ services:
       - ./notebooks:/home/jovyan/work
     environment:
       - JUPYTER_ENABLE_LAB=yes
-    command: start-notebook.sh --ServerApp.token=''
+      - STACK_YAML=/opt/library/stack.yaml
+    working_dir: /opt/library
+    # command: >
+    #   stack exec --cwd /opt/library --
+    #   start-notebook.sh --ServerApp.token='' --ServerApp.root_dir=/home/jovyan/work
+    command: >
+      stack exec -- start-notebook.sh --ServerApp.token='' --ServerApp.root_dir=/home/jovyan/work
